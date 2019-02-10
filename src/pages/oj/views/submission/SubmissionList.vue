@@ -11,19 +11,18 @@
                   <Icon type="arrow-down-b"></Icon>
                 </span>
                 <Dropdown-menu slot="list">
-                  <Dropdown-item name="">All</Dropdown-item>
+                  <Dropdown-item name="">전체</Dropdown-item>
                   <Dropdown-item v-for="status in Object.keys(JUDGE_STATUS)" :key="status" :name="status">
                     {{JUDGE_STATUS[status].name}}
                   </Dropdown-item>
                 </Dropdown-menu>
               </Dropdown>
             </li>
-
-
+              
             <li>
               <i-switch size="large" v-model="formFilter.myself" @on-change="handleQueryChange">
-                <span slot="open">Mine</span>
-                <span slot="close">All</span>
+                <span slot="open">내 문제</span>
+                <span slot="close">전체</span>
               </i-switch>
             </li>
             <li>
@@ -64,14 +63,14 @@
         },
         columns: [
           {
-            title: 'When',
+            title: '날짜',
             align: 'center',
             render: (h, params) => {
               return h('span', time.utcToLocal(params.row.create_time))
             }
           },
           {
-            title: 'ID',
+            title: '번호',
             align: 'center',
             render: (h, params) => {
               if (params.row.show_link) {
@@ -92,7 +91,7 @@
             }
           },
           {
-            title: 'Status',
+            title: '상태',
             align: 'center',
             render: (h, params) => {
               return h('Tag', {
@@ -103,7 +102,7 @@
             }
           },
           {
-            title: 'Problem',
+            title: '문제',
             align: 'center',
             render: (h, params) => {
               return h('span',
@@ -130,26 +129,26 @@
             }
           },
           {
-            title: 'Time',
+            title: '시간',
             align: 'center',
             render: (h, params) => {
               return h('span', utils.submissionTimeFormat(params.row.statistic_info.time_cost))
             }
           },
           {
-            title: 'Memory',
+            title: '메모리',
             align: 'center',
             render: (h, params) => {
               return h('span', utils.submissionMemoryFormat(params.row.statistic_info.memory_cost))
             }
           },
           {
-            title: 'Language',
+            title: '언어',
             align: 'center',
             key: 'language'
           },
           {
-            title: 'Author',
+            title: '만든이',
             align: 'center',
             render: (h, params) => {
               return h('a', {
@@ -297,15 +296,15 @@
       ...mapGetters(['isAuthenticated', 'user']),
       title () {
         if (!this.contestID) {
-          return 'Status'
+          return '상태'
         } else if (this.problemID) {
-          return 'Problem Submissions'
+          return '문제 제출'
         } else {
-          return 'Submissions'
+          return '제출'
         }
       },
       status () {
-        return this.formFilter.result === '' ? 'Status' : JUDGE_STATUS[this.formFilter.result].name
+        return this.formFilter.result === '' ? '상태' : JUDGE_STATUS[this.formFilter.result].name
       },
       rejudgeColumnVisible () {
         return !this.contestID && this.user.admin_type === USER_TYPE.SUPER_ADMIN

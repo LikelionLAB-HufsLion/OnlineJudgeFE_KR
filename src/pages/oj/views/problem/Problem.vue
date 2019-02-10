@@ -67,17 +67,17 @@
                 </Tag>
               </template>
               <template v-else-if="this.contestID && !OIContestRealTimePermission">
-                <Alert type="success" show-icon>Submitted successfully</Alert>
+                <Alert type="success" show-icon>성공적으로 제출되었습니다.</Alert>
               </template>
             </div>
             <div v-else-if="problem.my_status === 0">
-              <Alert type="success" show-icon>You have solved the problem</Alert>
+              <Alert type="success" show-icon>이미 푼 문제입니다.</Alert>
             </div>
             <div v-else-if="this.contestID && !OIContestRealTimePermission && submissionExists">
-              <Alert type="success" show-icon>You have submitted a solution.</Alert>
+              <Alert type="success" show-icon>풀이를 제출했습니다.</Alert>
             </div>
             <div v-if="contestEnded">
-              <Alert type="warning" show-icon>Contest has ended</Alert>
+              <Alert type="warning" show-icon>대회가 종료되었습니다.</Alert>
             </div>
           </Col>
 
@@ -93,8 +93,9 @@
             <Button type="warning" icon="edit" :loading="submitting" @click="submitCode"
                     :disabled="problemSubmitDisabled || submitted"
                     class="fl-right">
-              <span v-if="submitting">Submitting</span>
-              <span v-else>Submit</span>
+              <span v-if="submitting">제출중</span>
+              <span v-else-if="submitted">제출완료</span>
+              <span v-else>제출</span>
             </Button>
           </Col>
         </Row>
@@ -106,29 +107,29 @@
         <template v-if="this.contestID">
           <VerticalMenu-item :route="{name: 'contest-problem-list', params: {contestID: contestID}}">
             <Icon type="ios-photos"></Icon>
-            Problems
+            문제
           </VerticalMenu-item>
 
           <VerticalMenu-item :route="{name: 'contest-announcement-list', params: {contestID: contestID}}">
             <Icon type="chatbubble-working"></Icon>
-            Announcements
+            공지사항
           </VerticalMenu-item>
         </template>
 
         <VerticalMenu-item v-if="!this.contestID || OIContestRealTimePermission" :route="submissionRoute">
           <Icon type="navicon-round"></Icon>
-          Submissions
+          제출 현황
         </VerticalMenu-item>
 
         <template v-if="this.contestID">
           <VerticalMenu-item v-if="!this.contestID || OIContestRealTimePermission"
                              :route="{name: 'contest-rank', params: {contestID: contestID}}">
             <Icon type="stats-bars"></Icon>
-            Rankings
+            랭킹
           </VerticalMenu-item>
           <VerticalMenu-item :route="{name: 'contest-details', params: {contestID: contestID}}">
             <Icon type="home"></Icon>
-            View Contest
+            대회
           </VerticalMenu-item>
         </template>
       </VerticalMenu>
@@ -139,7 +140,7 @@
           <span class="card-title">{{$t('m.Information')}}</span>
         </div>
         <ul>
-          <li><p>ID</p>
+          <li><p>번호</p>
             <p>{{problem._id}}</p></li>
           <li>
             <p>{{$t('m.Time_Limit')}}</p>
@@ -174,8 +175,8 @@
       <Card id="pieChart" :padding="0" v-if="!this.contestID || OIContestRealTimePermission">
         <div slot="title">
           <Icon type="ios-analytics"></Icon>
-          <span class="card-title">Statistic</span>
-          <Button type="ghost" size="small" id="detail" @click="graphVisible = !graphVisible">Details</Button>
+          <span class="card-title">통계</span>
+          <Button type="ghost" size="small" id="detail" @click="graphVisible = !graphVisible">자세히</Button>
         </div>
         <div class="echarts">
           <ECharts :options="pie"></ECharts>
@@ -188,7 +189,7 @@
         <ECharts :options="largePie" :initOptions="largePieInitOpts"></ECharts>
       </div>
       <div slot="footer">
-        <Button type="ghost" @click="graphVisible=false">Close</Button>
+        <Button type="ghost" @click="graphVisible=false">닫기</Button>
       </div>
     </Modal>
   </div>
@@ -374,7 +375,6 @@
             this.result = res.data.data
             if (Object.keys(res.data.data.statistic_info).length !== 0) {
               this.submitting = false
-              this.submitted = false
               clearTimeout(this.refreshStatus)
               this.init()
             } else {
@@ -407,6 +407,7 @@
         const submitFunc = (data, detailsVisible) => {
           this.statusVisible = true
           api.submitCode(data).then(res => {
+            this.submitted = true
             this.submissionId = res.data.data && res.data.data.submission_id
             // 定时检查状态
             this.submitting = false
@@ -418,7 +419,6 @@
               })
               return
             }
-            this.submitted = true
             this.checkSubmissionStatus()
           }, res => {
             this.getCaptchaSrc()
@@ -536,7 +536,6 @@
     .sample {
       align-items: stretch;
       &-input, &-output {
-        width: 50%;
         flex: 1 1 auto;
         display: flex;
         flex-direction: column;

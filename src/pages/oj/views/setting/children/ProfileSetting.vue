@@ -104,13 +104,13 @@
 <script>
   import api from '@oj/api'
   import utils from '@/utils/utils'
-  import {VueCropper} from 'vue-cropper'
+  import vueCropper from 'vue-cropper'
   import {types} from '@/store'
   import {languages} from '@/i18n'
 
   export default {
     components: {
-      VueCropper
+      vueCropper
     },
     data () {
       return {

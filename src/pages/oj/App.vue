@@ -7,7 +7,7 @@
       </transition>
       <div class="footer">
         <p v-html="website.website_footer"></p>
-        <p>Powered by <a href="https://github.com/QingdaoU/OnlineJudge">OnlineJudge</a>
+        <p>Copyright &copy; 2018. <a href="https://github.com/LikelionLAB-HufsLion/Project-OnlineJudge">HUFS-Online Judge Co. All right reserved.</a>
           <span v-if="version">&nbsp; Version: {{ version }}</span>
         </p>
       </div>
